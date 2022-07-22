@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
 
             if (other.PlayerColor == PlayerColor)
             {
-                //Destroy(transform.gameObject);
+                Destroy(transform.gameObject);
             }
         }
     }
