@@ -4,41 +4,27 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public CharacterController controller;
-    public bool player;
-    public float speed;
-    public float jump_force;
+    public CharacterController2D controller;
+
+    public float runSpeed = 40f;
+    bool jump = false;
+    float horizontalMove = 0f;
+
     public Color PlayerColor;
 
-    bool jumpbtn;
-
-    private Rigidbody2D _rigidBody;
 
     private void Start()
     {
         transform.GetComponentInChildren<SpriteRenderer>().color = PlayerColor;
-        _rigidBody = GetComponent<Rigidbody2D>();
-    }
-
-    void UpdatePosition()
-    {
-        float movement = Input.GetAxis("Horizontal") * Time.fixedDeltaTime * speed;
-        transform.position += new Vector3(movement, 0, 0);
-
     }
 
     private void Update()
     {
-        jumpbtn = Input.GetButtonDown("Jump");
+        horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
 
-        if (jumpbtn)
-        {
-            _rigidBody.AddForce(new Vector2(0, jump_force), ForceMode2D.Impulse);
-        }
-    }
 
-    void FixedUpdate()
-    {
-        UpdatePosition();
+        jump = Input.GetKeyDown(KeyCode.Space);
+        controller.Move(horizontalMove * Time.deltaTime * 60, false, jump);
+        jump = false;
     }
 }
