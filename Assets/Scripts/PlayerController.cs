@@ -6,22 +6,25 @@ public class PlayerController : MonoBehaviour
 {
     public CharacterController2D controller;
     public bool primary = false;
-
+    private Rigidbody2D rb;
     public float runSpeed = 40f;
     bool jump = false;
     float horizontalMove = 0f;
-
+    private bool hasEnteredFinish = false;
     public Color PlayerColor;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.GetComponent<PlayerController>()) {
-
-            PlayerController other = collision.gameObject.GetComponent<PlayerController>();
-
-            if (other.PlayerColor == PlayerColor)
+        if (!hasEnteredFinish) {
+            if (collision.gameObject.GetComponent<PlayerController>())
             {
-                Destroy(transform.gameObject);
+
+                PlayerController other = collision.gameObject.GetComponent<PlayerController>();
+
+                if (other.PlayerColor == PlayerColor)
+                {
+                    Destroy(transform.gameObject);
+                }
             }
         }
     }
@@ -29,15 +32,27 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         transform.GetComponentInChildren<SpriteRenderer>().color = PlayerColor;
+        rb = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
     {
-        horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
+        if (!hasEnteredFinish)
+        {
+            horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
+            jump = Input.GetKeyDown(KeyCode.Space);
+            controller.Move(horizontalMove * Time.deltaTime * 60, false, jump);
+            jump = false;
+        }
+        else
+        {
+            Destroy(rb);
+            Destroy(GetComponent<BoxCollider2D>());
+        }
+    }
 
-
-        jump = Input.GetKeyDown(KeyCode.Space);
-        controller.Move(horizontalMove * Time.deltaTime * 60, false, jump);
-        jump = false;
+    public void EnteredFinish()
+    {
+        hasEnteredFinish = true;
     }
 }
