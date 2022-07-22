@@ -238,7 +238,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 497614680270475786}
   primary: 0
-  runSpeed: 1
+  runSpeed: 2
   PlayerColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &497614680409065231
 GameObject:
