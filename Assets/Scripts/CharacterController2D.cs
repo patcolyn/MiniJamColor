@@ -51,13 +51,21 @@ public class CharacterController2D : MonoBehaviour
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
 		for (int i = 0; i < colliders.Length; i++)
 		{
-			if (colliders[i].gameObject != gameObject)
+			GameObject obj = colliders[i].gameObject;
+			if (obj != gameObject)
 			{
-				m_Grounded = true;
-				if (!wasGrounded)
+				// Check if player below is grounded
+				if (obj.GetComponent<CharacterController2D>())
+					m_Grounded = obj.GetComponent<CharacterController2D>().m_Grounded;
+
+				// Ground if tilemap
+				if (obj.GetComponent<CompositeCollider2D>())
+					m_Grounded = true;
+
+				if (!wasGrounded && m_Grounded)
 					OnLandEvent.Invoke();
 			}
-		}
+		} 
 	}
 
 
