@@ -34,6 +34,7 @@ public class EndLevelTrigger : MonoBehaviour
                 numberOfPlayersRequired--;
                 collision.transform.position = transform.position;
                 collision.GetComponent<PlayerController>().EnteredFinish();
+                collision.GetComponent<Animator>().SetBool("enteredTrigger",true);
                 isActivated = true;
             }
         }

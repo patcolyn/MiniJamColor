@@ -54,5 +54,14 @@ public class PlayerController : MonoBehaviour
     public void EnteredFinish()
     {
         hasEnteredFinish = true;
+        Debug.Log("Has entered Finish");
+        StartCoroutine(destroyAfterAnimDuration());
+    }
+    private IEnumerator destroyAfterAnimDuration()
+    {
+        Debug.Log("start wait " + Time.time);
+        yield return new WaitForSeconds(0.35f);
+        Debug.Log("end wait "+ Time.time);
+        Destroy(transform.gameObject);
     }
 }
