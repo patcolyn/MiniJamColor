@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     private bool hasEnteredFinish = false;
     public Color PlayerColor;
     public ParticleSystem dust;
-    private bool facingRight = true;
+    private Animator animator;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
     {
         transform.GetComponentInChildren<SpriteRenderer>().color = PlayerColor;
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -44,13 +45,24 @@ public class PlayerController : MonoBehaviour
             horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
             jump = Input.GetKeyDown(KeyCode.Space);
             controller.Move(horizontalMove * Time.deltaTime * 60, false, jump);
-            jump = false;
-            if(horizontalMove > 0.01f || horizontalMove < -0.01f || jump)
+            if (horizontalMove > 0.01f || horizontalMove < -0.01f || jump)
             {
                 CreateDust();
+                if (jump)
+                {
+                    animator.SetTrigger("jump");
+                }
+                else
+                {
+                    animator.SetBool("running", true);
+                }
             }
-
-            Flip();
+            else
+            {
+                animator.SetBool("running", false);
+            }
+            jump = false;
+            
         }
         else
         {
@@ -77,18 +89,5 @@ public class PlayerController : MonoBehaviour
         dust.Play();
     }
 
-    // Doesn't work for some reason
-    private void Flip()
-    {
-        if (horizontalMove > 0.01f && !facingRight)
-        {
-            transform.Rotate(0f, 180f, 0f);
-            facingRight = !facingRight;
-        }
-        else if (horizontalMove < -0.01f && facingRight)
-        {
-            transform.Rotate(0f, 180f, 0f);
-            facingRight = !facingRight;
-        }
-    }
+    
 }
