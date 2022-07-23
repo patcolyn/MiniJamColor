@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     float horizontalMove = 0f;
     private bool hasEnteredFinish = false;
     public Color PlayerColor;
+    public ParticleSystem dust;
+    private bool facingRight = true;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -43,6 +45,12 @@ public class PlayerController : MonoBehaviour
             jump = Input.GetKeyDown(KeyCode.Space);
             controller.Move(horizontalMove * Time.deltaTime * 60, false, jump);
             jump = false;
+            if(horizontalMove > 0.01f || horizontalMove < -0.01f || jump)
+            {
+                CreateDust();
+            }
+
+            Flip();
         }
         else
         {
@@ -63,5 +71,24 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.35f);
         Debug.Log("end wait "+ Time.time);
         Destroy(transform.gameObject);
+    }
+    private void CreateDust()
+    {
+        dust.Play();
+    }
+
+    // Doesn't work for some reason
+    private void Flip()
+    {
+        if (horizontalMove > 0.01f && !facingRight)
+        {
+            transform.Rotate(0f, 180f, 0f);
+            facingRight = !facingRight;
+        }
+        else if (horizontalMove < -0.01f && facingRight)
+        {
+            transform.Rotate(0f, 180f, 0f);
+            facingRight = !facingRight;
+        }
     }
 }
